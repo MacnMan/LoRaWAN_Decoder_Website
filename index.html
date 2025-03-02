@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoRaWAN Hex Decoder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/javascript-lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/4.0.1/esprima.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LoRaWAN Hex Decoder</h1>
+        
+        <label for="jsEditor">Enter JS Decoder Function:</label>
+        <textarea id="jsEditor"></textarea>
+        
+        <button onclick="formatJsCode()">Format JS</button>
+        
+        <label for="hexInput">Enter Hex Bytes:</label>
+        <input type="text" id="hexInput" placeholder="e.g., AABBCCDD" oninput="formatHexInput()">
+        
+        <button onclick="decodePayload()">Decode</button>
+        
+        <h2>Decoded Output:</h2>
+        <pre id="output"></pre>
+        <button onclick="copyOutput()">Copy Output</button>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("jsEditor"), {
+            mode: "javascript",
+            lineNumbers: true,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
+            lint: true,
+            extraKeys: { "Ctrl-Space": "autocomplete" }
+        });
+        
+        function formatHexInput() {
+            let hexInput = document.getElementById('hexInput');
+            hexInput.value = hexInput.value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase().match(/.{1,2}/g)?.join(' ') || '';
+        }
+        
+        function copyOutput() {
+            const outputText = document.getElementById("output").innerText;
+            navigator.clipboard.writeText(outputText);
+        }
+        
+        function formatJsCode() {
+            let formattedCode = js_beautify(editor.getValue(), { indent_size: 2 });
+            editor.setValue(formattedCode);
+        }
+    </script>
+</body>
+</html>
