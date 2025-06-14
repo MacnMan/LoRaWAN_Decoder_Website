@@ -1,54 +1,99 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
-    padding: 10px;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f3f5;
 }
-.container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 800px;
-    text-align: center;
+
+.app-container {
+  display: flex;
+  flex-direction: row;
+  max-width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+/* Ad Panel */
+.side-ad {
+  flex: 0 0 160px;
+  padding: 10px;
 }
+
+/* Main Layout */
+.main-grid {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 20px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* Left Block (Editor + Input) */
+.left-block {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#editor {
+  height: 350px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+#hexInput {
+  width: 100%;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 16px;
+  margin: 8px 0 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
 }
+
 button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
+
+/* Right Block (Output) */
+.right-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
 pre {
-    background: #eee;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: left;
-    white-space: pre-wrap;
-    max-height: 200px;
-    overflow-y: auto;
-    font-size: 14px;
-    color: #333;
+  flex: 1;
+  background-color: #1e1e1e;
+  color: #dcdcdc;
+  padding: 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  border-radius: 4px;
+  overflow: auto;
 }
-.CodeMirror {
-    height: 300px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+/* Bottom Ad */
+.bottom-ad {
+  margin-top: 10px;
+  text-align: center;
 }

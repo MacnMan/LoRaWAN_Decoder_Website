@@ -1,65 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoRaWAN Hex Decoder</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/javascript-lint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/esprima/4.0.1/esprima.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/lint/lint.min.css">
+  <meta charset="UTF-8" />
+  <title>LoRaWAN Decoder Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>LoRaWAN Hex Decoder</h1>
-        
-        <label for="jsEditor">Enter JS Decoder Function:</label>
-        <textarea id="jsEditor"></textarea>
-        
-        <button onclick="formatJsCode()">Format JS</button>
-        
-        <label for="hexInput">Enter Hex Bytes:</label>
-        <input type="text" id="hexInput" placeholder="e.g., AABBCCDD" oninput="formatHexInput()">
-        
-        <button onclick="decodePayload()">Decode</button>
-        
-        <h2>Decoded Output:</h2>
-        <pre id="output"></pre>
-        <button onclick="copyOutput()">Copy Output</button>
+  <div class="app-container">
+
+    <!-- Optional Sidebar Ad -->
+    <div class="side-ad">
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-XXXXXXXXXXXX"
+        data-ad-slot="1111111111"
+        data-ad-format="vertical"
+        data-full-width-responsive="true"></ins>
     </div>
-    
-    <script src="script.js"></script>
-    <script>
-        var editor = CodeMirror.fromTextArea(document.getElementById("jsEditor"), {
-            mode: "javascript",
-            lineNumbers: true,
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
-            lint: true,
-            extraKeys: { "Ctrl-Space": "autocomplete" }
-        });
-        
-        function formatHexInput() {
-            let hexInput = document.getElementById('hexInput');
-            hexInput.value = hexInput.value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase().match(/.{1,2}/g)?.join(' ') || '';
-        }
-        
-        function copyOutput() {
-            const outputText = document.getElementById("output").innerText;
-            navigator.clipboard.writeText(outputText);
-        }
-        
-        function formatJsCode() {
-            let formattedCode = js_beautify(editor.getValue(), { indent_size: 2 });
-            editor.setValue(formattedCode);
-        }
-    </script>
+
+    <!-- Main Layout -->
+    <div class="main-grid">
+      <!-- Left Block: Editor + Input -->
+      <div class="left-block">
+        <h2>Decoder JS</h2>
+        <div id="editor"></div>
+
+        <label for="hexInput">LoRaWAN Packet:</label>
+        <input type="text" id="hexInput" placeholder="Paste LoRaWAN packet here" />
+        <button onclick="runDecoder()">Decode</button>
+      </div>
+
+      <!-- Right Block: Output -->
+      <div class="right-block">
+        <h2>Decoded Output</h2>
+        <pre id="output">Decoded results will appear here.</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional Banner Ad -->
+  <div class="bottom-ad">
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-XXXXXXXXXXXX"
+      data-ad-slot="2222222222"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+  </div>
+
+  <script>
+    require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } });
+    require(["vs/editor/editor.main"], function () {
+      window.editor = monaco.editor.create(document.getElementById("editor"), {
+        value: `function decodeUplink(input) {\n  return {\n    data: {\n      bytes: input.bytes\n    },\n    warnings: [],\n    errors: []\n  };\n}`,
+        language: "javascript",
+        theme: "vs-dark",
+        automaticLayout: true,
+      });
+    });
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <script src="script.js"></script>
 </body>
 </html>

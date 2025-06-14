@@ -1,29 +1,54 @@
-/* script.js */
-function decodePayload() {
-    const hexInput = document.getElementById('hexInput').value.replace(/\s/g, '');
-    const jsCode = editor.getValue();
-    const outputElement = document.getElementById('output');
-
-    const jsSize = new Blob([jsCode]).size;
-    if (jsSize > 40000) {
-        outputElement.textContent = 'Error: JS script exceeds 40KB size limit';
-        return;
-    }
-
-    try {
-        const bytes = hexInput.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
-        const decodeFunction = new Function('input', jsCode + '\nreturn decodeUplink(input);');
-        const result = decodeFunction({ bytes });
-        outputElement.innerHTML = `<pre style='color: green;'>${syntaxHighlight(result)}</pre>`;
-    } catch (error) {
-        outputElement.innerHTML = `<pre style='color: red;'>Error: ${error.message}</pre>`;
-    }
+function hexToBytes(hex) {
+  return hex.trim().split(/\s+/).map(byte => parseInt(byte, 16));
 }
 
-function syntaxHighlight(json) {
-    if (typeof json !== 'string') {
-        json = JSON.stringify(json, null, 2);
-    }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/(".*?"|\b\d+\b)/g, '<span style="color:blue;">$1</span>');
+function formatHexInput(hex) {
+  // Remove all non-hex characters
+  const cleanHex = hex.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
+  let result = '';
+  for (let i = 0; i < cleanHex.length; i += 2) {
+    if (i > 0) result += ' ';
+    result += cleanHex.substr(i, 2);
+  }
+  return result.trim();
 }
+
+function validateHexInput(hex) {
+  const bytes = hex.trim().split(/\s+/);
+  return bytes.every(byte => /^[0-9A-Fa-f]{2}$/.test(byte));
+}
+
+function runDecoder() {
+  const hexInput = document.getElementById('hexInput');
+  const userCode = window.editor.getValue();
+  const rawHex = hexInput.value;
+  const formattedHex = formatHexInput(rawHex);
+  const outputElement = document.getElementById('output');
+
+  hexInput.value = formattedHex; // auto format input
+
+  if (!validateHexInput(formattedHex)) {
+    outputElement.textContent = 'Invalid byte(s) detected. Please enter valid hex bytes (e.g., "00 02 04").';
+    return;
+  }
+
+  const byteArray = hexToBytes(formattedHex);
+
+  try {
+    const fullCode = `
+      ${userCode}
+      decodeUplink({bytes: ${JSON.stringify(byteArray)}});
+    `;
+    const result = eval(fullCode);
+    outputElement.textContent = JSON.stringify(result, null, 2);
+  } catch (err) {
+    outputElement.textContent = 'Error:\n' + err;
+  }
+}
+
+// Auto-format input as user types
+const hexInputField = document.getElementById('hexInput');
+hexInputField.addEventListener('input', (e) => {
+  const formatted = formatHexInput(e.target.value);
+  e.target.value = formatted;
+});
